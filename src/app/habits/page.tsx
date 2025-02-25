@@ -19,33 +19,34 @@ const habits = [
 ];
 
 type Mark = "" | "•" | "X";
+type Habit = {
+  name: string;
+  marks: Mark[];
+};
 
 export default function HabitTracker() {
-  const [marks, setMarks] = useState<{ [key: string]: Mark[] }>(() => {
-    const initialMarks: { [key: string]: Mark[] } = {};
-    habits.forEach((habit) => {
-      initialMarks[habit] = Array(31).fill("");
-    });
-    return initialMarks;
-  });
-
+  const [habitList, setHabitList] = useState<Habit[]>(
+    habits.map((name) => ({ name, marks: Array(31).fill("") })),
+  );
   const [currentWeek, setCurrentWeek] = useState(0);
 
-  const toggleMark = (habit: string, day: number) => {
-    setMarks((prev) => {
-      const newMarks = { ...prev };
-      const currentMark = newMarks[habit][day];
-      newMarks[habit] = [...prev[habit]];
+  const toggleMark = (habit: Habit, day: number) => {
+    const currentMark = habit.marks[day];
+    let newMark: Mark;
+    if (currentMark === "") {
+      newMark = "•";
+    } else if (currentMark === "•") {
+      newMark = "X";
+    } else {
+      newMark = "";
+    }
 
-      if (currentMark === "") {
-        newMarks[habit][day] = "•";
-      } else if (currentMark === "•") {
-        newMarks[habit][day] = "X";
-      } else {
-        newMarks[habit][day] = "";
-      }
-
-      return newMarks;
+    setHabitList((prev) => {
+      const newHabitList = [...prev];
+      const index = newHabitList.findIndex((h) => h.name === habit.name);
+      if (index === -1) return prev;
+      newHabitList[index].marks[day] = newMark;
+      return newHabitList;
     });
   };
 
@@ -115,12 +116,14 @@ export default function HabitTracker() {
             ))}
 
             {/* Habit rows */}
-            {habits.map((habit) => (
-              <React.Fragment key={habit}>
-                <div className="bg-white p-2 text-sm truncate">{habit}</div>
+            {habitList.map((habit) => (
+              <React.Fragment key={habit.name}>
+                <div className="bg-white p-2 text-sm truncate">
+                  {habit.name}
+                </div>
                 {Array.from({ length: 31 }, (_, i) => (
                   <button
-                    key={`${habit}-${i}`}
+                    key={`${habit.name}-${i}`}
                     className={cn(
                       "bg-white hover:bg-neutral-50 p-2 text-center text-sm transition-colors",
                       isWeekend(i + 1) && "font-bold",
@@ -130,7 +133,7 @@ export default function HabitTracker() {
                     )}
                     onClick={() => toggleMark(habit, i)}
                   >
-                    {marks[habit][i]}
+                    {habit.marks[i]}
                   </button>
                 ))}
               </React.Fragment>
