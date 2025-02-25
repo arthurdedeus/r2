@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MonthSelector } from "./components/month-selector";
+import { WeekNavigation } from "./components/week-navigation";
 
 const habits = [
   "Creative",
@@ -35,6 +36,7 @@ export default function HabitTracker() {
     () => new Date(year, month, 0).getDate(),
     [year, month],
   );
+
   const weeksInMonth = Math.ceil(daysInMonth / 7);
 
   const [habitList, setHabitList] = useState<Habit[]>(() =>
@@ -133,31 +135,11 @@ export default function HabitTracker() {
     <div className="p-4 md:p-8 min-h-screen bg-[#f5f3eb]">
       <div className="max-w-full md:max-w-[1200px] mx-auto">
         <MonthSelector month={month} year={year} onChange={updateMonthYear} />
-
-        {/* Mobile week navigation */}
-        <div className="flex items-center justify-between mb-4 md:hidden">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => changeWeek("prev")}
-            disabled={currentWeek === 0}
-            className="px-2"
-          >
-            <ChevronLeft className="h-4 w-4 mr-1" />
-            Prev
-          </Button>
-          <span className="font-medium">Week {currentWeek + 1}</span>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => changeWeek("next")}
-            disabled={currentWeek === weeksInMonth - 1}
-            className="px-2"
-          >
-            Next
-            <ChevronRight className="h-4 w-4 ml-1" />
-          </Button>
-        </div>
+        <WeekNavigation
+          currentWeek={currentWeek}
+          weeksInMonth={weeksInMonth}
+          changeWeek={changeWeek}
+        />
 
         <div className="overflow-x-auto rounded">
           <div
