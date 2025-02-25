@@ -4,6 +4,7 @@ import React, { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MonthSelector } from "./components/month-selector";
 
 const habits = [
   "Creative",
@@ -131,35 +132,7 @@ export default function HabitTracker() {
   return (
     <div className="p-4 md:p-8 min-h-screen bg-[#f5f3eb]">
       <div className="max-w-full md:max-w-[1200px] mx-auto">
-        {/* Month and Year selector */}
-        <div className="flex items-center gap-4 mb-4">
-          <select
-            value={month}
-            onChange={(e) =>
-              updateMonthYear(Number.parseInt(e.target.value), year)
-            }
-            className="bg-[#f5f3eb] border border-none rounded pr-2 py-1"
-          >
-            {Array.from({ length: 12 }, (_, i) => (
-              <option key={i + 1} value={i + 1}>
-                {new Date(2024, i).toLocaleString("default", { month: "long" })}
-              </option>
-            ))}
-          </select>
-          <select
-            value={year}
-            onChange={(e) =>
-              updateMonthYear(month, Number.parseInt(e.target.value))
-            }
-            className="bg-[#f5f3eb] border border-none rounded pr-2 py-1"
-          >
-            {Array.from({ length: 10 }, (_, i) => (
-              <option key={2020 + i} value={2020 + i}>
-                {2020 + i}
-              </option>
-            ))}
-          </select>
-        </div>
+        <MonthSelector month={month} year={year} onChange={updateMonthYear} />
 
         {/* Mobile week navigation */}
         <div className="flex items-center justify-between mb-4 md:hidden">
