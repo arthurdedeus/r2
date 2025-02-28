@@ -1,35 +1,13 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React, { useState, useMemo, useEffect } from "react";
 import { MonthSelector } from "./components/month-selector";
 import { WeekNavigation } from "./components/week-navigation";
-
-const habits = [
-  "Creative",
-  "Journaling",
-  "Gratitude",
-  "Reading",
-  "Routine",
-  "Flow/Focus",
-  "Yoga",
-  "Suuuuuper long habit name to break the UI",
-  "Alignment",
-  "Let it in",
-];
-
-type Mark = "" | "•" | "X";
-type Habit = {
-  name: string;
-  marks: Mark[];
-};
+import { HabitsTable } from "./components/habits-table";
 
 export default function HabitTracker() {
-  const today = new Date();
-  const [month, setMonth] = useState(today.getMonth() + 1);
-  const [year, setYear] = useState(today.getFullYear());
+  const [month, setMonth] = useState(() => new Date().getMonth() + 1);
+  const [year, setYear] = useState(() => new Date().getFullYear());
   const [currentWeek, setCurrentWeek] = useState(0);
 
   const daysInMonth = useMemo(
@@ -38,41 +16,6 @@ export default function HabitTracker() {
   );
 
   const weeksInMonth = Math.ceil(daysInMonth / 7);
-
-  const [habitList, setHabitList] = useState<Habit[]>(() =>
-    habits.map((name) => ({ name, marks: Array(daysInMonth).fill("") })),
-  );
-
-  const toggleMark = (habit: Habit, day: number) => {
-    const currentMark = habit.marks[day];
-    let newMark: Mark;
-    if (currentMark === "") {
-      newMark = "•";
-    } else if (currentMark === "•") {
-      newMark = "X";
-    } else {
-      newMark = "";
-    }
-
-    setHabitList((prev) => {
-      const newHabitList = [...prev];
-      const index = newHabitList.findIndex((h) => h.name === habit.name);
-      if (index === -1) return prev;
-      newHabitList[index] = {
-        ...newHabitList[index],
-        marks: [...newHabitList[index].marks],
-      };
-      newHabitList[index].marks[day] = newMark;
-      return newHabitList;
-    });
-  };
-
-  const isWeekend = (day: number | null) => {
-    if (day === null) return false;
-    const date = new Date(year, month - 1, day);
-    const dayOfWeek = date.getDay();
-    return dayOfWeek === 0 || dayOfWeek === 6;
-  };
 
   const changeWeek = (direction: "prev" | "next") => {
     setCurrentWeek((prev) => {
@@ -85,51 +28,10 @@ export default function HabitTracker() {
   };
 
   const updateMonthYear = (newMonth: number, newYear: number) => {
-    const newDaysInMonth = new Date(newYear, newMonth, 0).getDate();
-
     setMonth(newMonth);
     setYear(newYear);
-    setHabitList((prev) =>
-      prev.map((habit) => ({
-        ...habit,
-        marks: Array(newDaysInMonth)
-          .fill("")
-          .map((_, i) => (i < habit.marks.length ? habit.marks[i] : "")),
-      })),
-    );
     setCurrentWeek(0);
   };
-
-  const mobileGridStyle = {
-    gridTemplateColumns: "100px repeat(7, minmax(30px, 1fr))",
-  };
-
-  const desktopGridStyle = {
-    gridTemplateColumns: `200px repeat(${daysInMonth}, minmax(30px, 1fr))`,
-  };
-
-  const getCurrentWeekDays = () => {
-    if (window?.innerWidth >= 768) {
-      return Array.from({ length: daysInMonth }, (_, i) => i);
-    }
-
-    const startDay = currentWeek * 7;
-    const days = [];
-
-    // Always push 7 items for mobile view
-    for (let i = 0; i < 7; i++) {
-      const dayIndex = startDay + i;
-      if (dayIndex < daysInMonth) {
-        days.push(dayIndex);
-      } else {
-        days.push(null); // Push null for empty cells
-      }
-    }
-
-    return days;
-  };
-
-  const days = getCurrentWeekDays();
 
   return (
     <div className="p-4 md:p-8 min-h-screen bg-[#f5f3eb]">
@@ -140,58 +42,12 @@ export default function HabitTracker() {
           weeksInMonth={weeksInMonth}
           changeWeek={changeWeek}
         />
-
-        <div className="overflow-x-auto rounded">
-          <div
-            className="grid gap-px bg-neutral-200 min-w-full"
-            style={
-              window?.innerWidth >= 768 ? desktopGridStyle : mobileGridStyle
-            }
-          >
-            {/* Header row with day numbers */}
-            <div className="bg-white p-2 font-medium">
-              <span className="hidden md:inline">Habit</span>
-            </div>
-            {days.map((dayIndex, i) => (
-              <div
-                key={i}
-                className={cn(
-                  dayIndex !== null ? "bg-white" : "bg-neutral-200",
-                  "p-2 text-center text-sm whitespace-nowrap",
-                  isWeekend(dayIndex) ? "font-bold" : "",
-                )}
-              >
-                {dayIndex !== null && dayIndex + 1}
-              </div>
-            ))}
-
-            {/* Habit rows */}
-            {habitList.map((habit) => (
-              <React.Fragment key={habit.name}>
-                <div className="bg-white p-2 text-sm truncate">
-                  {habit.name}
-                </div>
-                {days.map((dayIndex, i) => (
-                  <div
-                    key={`${habit.name}-${i}`}
-                    className={cn(
-                      dayIndex !== null
-                        ? "bg-white hover:bg-neutral-50"
-                        : "bg-neutral-200",
-                      "p-2 text-center text-sm",
-                    )}
-                    onClick={() =>
-                      dayIndex !== null && toggleMark(habit, dayIndex)
-                    }
-                    role={dayIndex !== null ? "button" : undefined}
-                  >
-                    {dayIndex !== null && habit.marks[dayIndex]}
-                  </div>
-                ))}
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
+        <HabitsTable
+          currentWeek={currentWeek}
+          daysInMonth={daysInMonth}
+          month={month}
+          year={year}
+        />
       </div>
     </div>
   );
