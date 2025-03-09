@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { Habit, Mark } from "../types";
 import { db } from "@/database";
@@ -23,6 +25,7 @@ export const HabitsTable = ({
     email: "john.doe@example.com",
   });
   const [habitList, setHabitList] = useState<Habit[]>([]);
+  const [isDesktop, setIsDesktop] = useState<boolean | undefined>(undefined);
 
   const mobileGridStyle = {
     gridTemplateColumns: "100px repeat(7, minmax(30px, 1fr))",
@@ -64,8 +67,7 @@ export const HabitsTable = ({
   };
 
   const getCurrentWeekDays = () => {
-    // FIXME: This is raising an error when window is not defined
-    if (window?.innerWidth >= 768) {
+    if (isDesktop) {
       return Array.from({ length: daysInMonth }, (_, i) => i);
     }
 
@@ -88,6 +90,12 @@ export const HabitsTable = ({
   const days = getCurrentWeekDays();
 
   useEffect(() => {
+    if (window !== undefined) {
+      setIsDesktop(window.innerWidth >= 768);
+    }
+  }, []);
+
+  useEffect(() => {
     const habitGroup = db.habitGroups.find(
       (group) =>
         group.userId === user.id &&
@@ -107,47 +115,51 @@ export const HabitsTable = ({
 
   return (
     <div className="overflow-x-auto rounded">
-      <div
-        className="grid gap-px bg-neutral-200 min-w-full"
-        style={window?.innerWidth >= 768 ? desktopGridStyle : mobileGridStyle}
-      >
-        <div className="bg-white p-2 font-medium">
-          <span className="hidden md:inline">Habit</span>
-        </div>
-        {days.map((dayIndex, i) => (
-          <div
-            key={i}
-            className={cn(
-              dayIndex !== null ? "bg-white" : "bg-neutral-200",
-              "p-2 text-center text-sm whitespace-nowrap",
-              isWeekend(dayIndex) ? "font-bold" : "",
-            )}
-          >
-            {dayIndex !== null && dayIndex + 1}
+      {isDesktop !== undefined && (
+        <div
+          className="grid gap-px bg-neutral-200 min-w-full"
+          style={isDesktop ? desktopGridStyle : mobileGridStyle}
+        >
+          <div className="bg-white p-2 font-medium">
+            <span className="hidden md:inline">Habit</span>
           </div>
-        ))}
+          {days.map((dayIndex, i) => (
+            <div
+              key={i}
+              className={cn(
+                dayIndex !== null ? "bg-white" : "bg-neutral-200",
+                "p-2 text-center text-sm whitespace-nowrap",
+                isWeekend(dayIndex) ? "font-bold" : "",
+              )}
+            >
+              {dayIndex !== null && dayIndex + 1}
+            </div>
+          ))}
 
-        {habitList.map((habit) => (
-          <React.Fragment key={habit.name}>
-            <div className="bg-white p-2 text-sm truncate">{habit.name}</div>
-            {days.map((dayIndex, i) => (
-              <div
-                key={`${habit.name}-${i}`}
-                className={cn(
-                  dayIndex !== null
-                    ? "bg-white hover:bg-neutral-50"
-                    : "bg-neutral-200",
-                  "p-2 text-center text-sm",
-                )}
-                onClick={() => dayIndex !== null && toggleMark(habit, dayIndex)}
-                role={dayIndex !== null ? "button" : undefined}
-              >
-                {dayIndex !== null && habit.marks[dayIndex]}
-              </div>
-            ))}
-          </React.Fragment>
-        ))}
-      </div>
+          {habitList.map((habit) => (
+            <React.Fragment key={habit.name}>
+              <div className="bg-white p-2 text-sm truncate">{habit.name}</div>
+              {days.map((dayIndex, i) => (
+                <div
+                  key={`${habit.name}-${i}`}
+                  className={cn(
+                    dayIndex !== null
+                      ? "bg-white hover:bg-neutral-50"
+                      : "bg-neutral-200",
+                    "p-2 text-center text-sm",
+                  )}
+                  onClick={() =>
+                    dayIndex !== null && toggleMark(habit, dayIndex)
+                  }
+                  role={dayIndex !== null ? "button" : undefined}
+                >
+                  {dayIndex !== null && habit.marks[dayIndex]}
+                </div>
+              ))}
+            </React.Fragment>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
