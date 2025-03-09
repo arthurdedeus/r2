@@ -17,7 +17,7 @@ export const HabitsTable = ({
   month,
   year,
 }: HabitsTableProps) => {
-  const [user, setUser] = useState({
+  const [user] = useState({
     id: 1,
     name: "Arthur",
     email: "john.doe@example.com",
