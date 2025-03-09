@@ -65,7 +65,7 @@ export const HabitsTable = ({
 
   const getCurrentWeekDays = () => {
     // FIXME: This is raising an error when window is not defined
-    if (window?.innerWidth >= 768) {
+    if (typeof window !== "undefined" && window.innerWidth >= 768) {
       return Array.from({ length: daysInMonth }, (_, i) => i);
     }
 
