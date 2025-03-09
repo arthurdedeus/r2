@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { MonthSelector } from "./components/month-selector";
 import { WeekNavigation } from "./components/week-navigation";
 import { HabitsTable } from "./components/habits-table";
