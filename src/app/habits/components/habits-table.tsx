@@ -1,8 +1,5 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { Habit, Mark } from "../types";
-import { db } from "@/database";
 import { cn } from "@/lib/utils";
 import React from "react";
 
@@ -19,13 +16,9 @@ export const HabitsTable = ({
   month,
   year,
 }: HabitsTableProps) => {
-  const [user] = useState({
-    id: 1,
-    name: "Arthur",
-    email: "john.doe@example.com",
-  });
   const [habitList, setHabitList] = useState<Habit[]>([]);
   const [isDesktop, setIsDesktop] = useState<boolean | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
 
   const mobileGridStyle = {
     gridTemplateColumns: "100px repeat(7, minmax(30px, 1fr))",
@@ -90,32 +83,37 @@ export const HabitsTable = ({
   const days = getCurrentWeekDays();
 
   useEffect(() => {
+    setLoading(true);
+    async function getHabitGroups() {
+      try {
+        const params = new URLSearchParams({
+          userId: String(1),
+          month: String(month),
+          year: String(year),
+        }).toString();
+
+        const res = await fetch("/api/habit-groups?" + params);
+        const json = await res.json();
+        setHabitList(json.habits);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    getHabitGroups();
+  }, [month, year]);
+
+  useEffect(() => {
     if (window !== undefined) {
       setIsDesktop(window.innerWidth >= 768);
     }
   }, []);
 
-  useEffect(() => {
-    const habitGroup = db.habitGroups.find(
-      (group) =>
-        group.userId === user.id &&
-        group.year === year &&
-        group.month === month,
-    );
-    if (!habitGroup) {
-      setHabitList([]);
-      return;
-    }
-    const habitList = habitGroup.habits.map((habit) => ({
-      name: habit.name,
-      marks: habit.marks,
-    }));
-    setHabitList(habitList);
-  }, [user, month, year]);
-
   return (
     <div className="overflow-x-auto rounded">
-      {isDesktop !== undefined && (
+      {!loading && (
         <div
           className="grid gap-px bg-neutral-200 min-w-full"
           style={isDesktop ? desktopGridStyle : mobileGridStyle}
