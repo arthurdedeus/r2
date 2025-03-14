@@ -1,9 +1,16 @@
+import { Mark } from "@/app/habits/types";
 import { createClient } from "@/lib/supabase/server";
 
 interface GetHabitGroupByMonthProps {
   userId: number;
   year: number;
   month: number;
+}
+
+interface UpdateHabitProps {
+  id: number;
+  name?: string;
+  marks?: Mark[];
 }
 
 export async function getHabitGroupByMonth({
@@ -25,4 +32,20 @@ export async function getHabitGroupByMonth({
   }
 
   return habitGroup;
+}
+
+export async function updateHabit({ id, marks, name }: UpdateHabitProps) {
+  const supabase = await createClient();
+  const { data: habit } = await supabase
+    .from("habits")
+    .update({ id, marks, name })
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (!habit) {
+    throw new Error("Habit not found");
+  }
+
+  return habit;
 }
