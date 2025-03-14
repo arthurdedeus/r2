@@ -39,16 +39,27 @@ export const HabitsTable = ({
       newMark = "";
     }
 
+    const newMarks = [...habit.marks];
+    newMarks[day] = newMark;
+
     setHabitList((prev) => {
       const newHabitList = [...prev];
       const index = newHabitList.findIndex((h) => h.name === habit.name);
       if (index === -1) return prev;
+
       newHabitList[index] = {
         ...newHabitList[index],
-        marks: [...newHabitList[index].marks],
+        marks: newMarks,
       };
-      newHabitList[index].marks[day] = newMark;
       return newHabitList;
+    });
+
+    fetch(`/api/habits/${habit.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ marks: newMarks }),
     });
   };
 
