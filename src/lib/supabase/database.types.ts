@@ -34,7 +34,7 @@ export type Database = {
   };
   public: {
     Tables: {
-      habit_groups: {
+      habitgroups: {
         Row: {
           created_at: string;
           id: number;
@@ -93,7 +93,7 @@ export type Database = {
             foreignKeyName: "habits_habit_group_id_fkey";
             columns: ["habit_group_id"];
             isOneToOne: false;
-            referencedRelation: "habit_groups";
+            referencedRelation: "habitgroups";
             referencedColumns: ["id"];
           },
         ];
