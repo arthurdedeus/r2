@@ -1,7 +1,6 @@
 import { Mark } from "@/app/habits/types";
 import { updateHabit } from "@/lib/crud";
 import { Tables } from "@/lib/supabase/database.types";
-import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 interface PatchHabitBody {
