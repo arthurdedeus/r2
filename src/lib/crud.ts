@@ -35,7 +35,7 @@ export async function updateHabit({ id, marks, name }: UpdateHabitProps) {
   const supabase = await createClient();
   const { data: habit } = await supabase
     .from("habits")
-    .update({ id, marks, name })
+    .update({ marks, name })
     .eq("id", id)
     .select()
     .single();
