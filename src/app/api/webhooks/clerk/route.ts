@@ -1,6 +1,7 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
+import { createClient } from "@/lib/supabase/server";
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.SIGNING_SECRET;
@@ -42,8 +43,12 @@ export async function POST(req: Request) {
   }
 
   if (evt.type === "user.created") {
-    const userId = evt.data.id;
-    console.log({ userId });
+    const supabaseClient = await createClient(process.env.SERVICE_ROLE_KEY);
+    await supabaseClient.from("users").insert({
+      user_id: evt.data.id,
+      email: evt.data.email_addresses[0].email_address,
+      name: evt.data.first_name + " " + evt.data.last_name,
+    });
   }
 
   return new Response("Webhook received", { status: 200 });
