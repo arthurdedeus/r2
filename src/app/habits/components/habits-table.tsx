@@ -65,7 +65,7 @@ export const HabitsTable = ({
 
   const isWeekend = (day: number | null) => {
     if (day === null) return false;
-    const date = new Date(year, month - 1, day);
+    const date = new Date(year, month - 1, day + 1);
     const dayOfWeek = date.getDay();
     return dayOfWeek === 0 || dayOfWeek === 6;
   };
