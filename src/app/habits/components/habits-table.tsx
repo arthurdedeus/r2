@@ -145,31 +145,28 @@ export const HabitsTable = ({
             </div>
           ))}
 
-          {habitList &&
-            habitList.map((habit) => (
-              <React.Fragment key={habit.name}>
-                <div className="bg-white p-2 text-sm truncate">
-                  {habit.name}
+          {habitList?.map((habit) => (
+            <React.Fragment key={habit.name}>
+              <div className="bg-white p-2 text-sm truncate">{habit.name}</div>
+              {days.map((dayIndex, i) => (
+                <div
+                  key={`${habit.name}-${i}`}
+                  className={cn(
+                    dayIndex !== null
+                      ? "bg-white hover:bg-neutral-50"
+                      : "bg-neutral-200",
+                    "p-2 text-center text-sm",
+                  )}
+                  onClick={() =>
+                    dayIndex !== null && toggleMark(habit, dayIndex)
+                  }
+                  role={dayIndex !== null ? "button" : undefined}
+                >
+                  {dayIndex !== null && habit.marks[dayIndex]}
                 </div>
-                {days.map((dayIndex, i) => (
-                  <div
-                    key={`${habit.name}-${i}`}
-                    className={cn(
-                      dayIndex !== null
-                        ? "bg-white hover:bg-neutral-50"
-                        : "bg-neutral-200",
-                      "p-2 text-center text-sm",
-                    )}
-                    onClick={() =>
-                      dayIndex !== null && toggleMark(habit, dayIndex)
-                    }
-                    role={dayIndex !== null ? "button" : undefined}
-                  >
-                    {dayIndex !== null && habit.marks[dayIndex]}
-                  </div>
-                ))}
-              </React.Fragment>
-            ))}
+              ))}
+            </React.Fragment>
+          ))}
         </div>
       )}
     </div>
