@@ -17,15 +17,16 @@ export async function getHabitGroupByMonth({
   month,
 }: GetHabitGroupByMonthProps) {
   const supabase = await createClient();
-  const { data: habitGroup } = await supabase
+  const { data: habitGroup, error } = await supabase
     .from("habitgroups")
     .select(`*, habits(*)`)
+    .order("created_at", { foreignTable: "habits", ascending: true })
     .eq("month", month)
     .eq("year", year)
     .single();
 
-  if (!habitGroup) {
-    throw new Error("HabitGroup not found");
+  if (error) {
+    throw new Error(error.message);
   }
 
   return habitGroup;
@@ -33,15 +34,15 @@ export async function getHabitGroupByMonth({
 
 export async function updateHabit({ id, marks, name }: UpdateHabitProps) {
   const supabase = await createClient();
-  const { data: habit } = await supabase
+  const { data: habit, error } = await supabase
     .from("habits")
     .update({ marks, name })
     .eq("id", id)
     .select()
     .single();
 
-  if (!habit) {
-    throw new Error("Habit not found");
+  if (error) {
+    throw new Error(error.message);
   }
 
   return habit;

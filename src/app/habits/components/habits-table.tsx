@@ -65,7 +65,7 @@ export const HabitsTable = ({
 
   const isWeekend = (day: number | null) => {
     if (day === null) return false;
-    const date = new Date(year, month - 1, day);
+    const date = new Date(year, month - 1, day + 1);
     const dayOfWeek = date.getDay();
     return dayOfWeek === 0 || dayOfWeek === 6;
   };
@@ -145,7 +145,7 @@ export const HabitsTable = ({
             </div>
           ))}
 
-          {habitList.map((habit) => (
+          {habitList?.map((habit) => (
             <React.Fragment key={habit.name}>
               <div className="bg-white p-2 text-sm truncate">{habit.name}</div>
               {days.map((dayIndex, i) => (
