@@ -48,7 +48,9 @@ export async function getOrCreateHabitGroup({
   try {
     habitGroup = await getHabitGroupByMonth({ year, month });
     return habitGroup;
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+  }
 
   const { data: newHabitGroup, error } = await supabase
     .from("habitgroups")
