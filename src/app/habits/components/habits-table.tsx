@@ -18,6 +18,8 @@ export const HabitsTable = ({
   year,
 }: HabitsTableProps) => {
   const [isDesktop, setIsDesktop] = useState<boolean | undefined>(undefined);
+  const [newHabit, setNewHabit] = useState<Habit | null>(null);
+  const newHabitInputRef = React.useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
   const { data, isLoading } = useQuery<HabitGroup>({
     queryKey: ["habit-groups", month, year],
@@ -96,6 +98,50 @@ export const HabitsTable = ({
 
   const days = getCurrentWeekDays();
 
+  const handleAddHabit = () => {
+    setNewHabit({
+      name: "",
+      marks: Array(daysInMonth).fill(""),
+      id: 0,
+    });
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNewHabit((prev) => {
+      if (!prev) return prev;
+      console.log({ prev });
+      return { ...prev, name: event.target.value };
+    });
+  };
+
+  const createNewHabit = async () => {
+    if (!newHabit) return;
+    fetch("/api/habits", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        marks: newHabit.marks,
+        month: month,
+        name: newHabit.name,
+        year: year,
+      }),
+    }).then(() =>
+      queryClient
+        .invalidateQueries({
+          queryKey: ["habit-groups", month, year],
+        })
+        .then(() => {
+          setNewHabit(null);
+        }),
+    );
+  };
+
+  useEffect(() => {
+    newHabitInputRef?.current?.focus();
+  }, [newHabit]);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       setIsDesktop(window.innerWidth >= 768);
@@ -110,8 +156,11 @@ export const HabitsTable = ({
       >
         {!isLoading && (
           <>
-            <div className="bg-white p-2 font-medium">
+            <div className="flex flex-row justify-between bg-white p-2 font-medium">
               <span className="hidden md:inline">Habit</span>
+              <button className="hidden md:inline" onClick={handleAddHabit}>
+                +
+              </button>
             </div>
             {days.map((dayIndex, i) => (
               <div
@@ -126,7 +175,7 @@ export const HabitsTable = ({
               </div>
             ))}
             {data?.habits?.map((habit) => (
-              <React.Fragment key={habit.name}>
+              <React.Fragment key={habit.id}>
                 <div className="bg-white p-2 text-sm truncate">
                   {habit.name}
                 </div>
@@ -149,6 +198,33 @@ export const HabitsTable = ({
                 ))}
               </React.Fragment>
             ))}
+            {newHabit && (
+              <>
+                <input
+                  className="bg-white p-2 text-sm truncate"
+                  onChange={handleInputChange}
+                  onBlur={createNewHabit}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      event.currentTarget.blur();
+                    }
+                  }}
+                  ref={newHabitInputRef}
+                />
+                {days.map((dayIndex, i) => (
+                  <div
+                    key={`${newHabit.name}-${i}`}
+                    className={cn(
+                      dayIndex !== null
+                        ? "bg-white hover:bg-neutral-50"
+                        : "bg-neutral-200",
+                      "p-2 text-center text-sm",
+                    )}
+                    role={dayIndex !== null ? "button" : undefined}
+                  />
+                ))}
+              </>
+            )}
           </>
         )}
       </div>
