@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Habit, Mark } from "../types";
+import { Habit, Mark, HabitGroup } from "@/app/habits/types";
 import { cn } from "@/lib/utils";
 import React from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface HabitsTableProps {
   currentWeek: number;
@@ -16,9 +17,22 @@ export const HabitsTable = ({
   month,
   year,
 }: HabitsTableProps) => {
-  const [habitList, setHabitList] = useState<Habit[]>([]);
   const [isDesktop, setIsDesktop] = useState<boolean | undefined>(undefined);
-  const [loading, setLoading] = useState(true);
+  const [newHabit, setNewHabit] = useState<Habit | null>(null);
+  const newHabitInputRef = React.useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
+  const { data, isLoading } = useQuery<HabitGroup>({
+    queryKey: ["habit-groups", month, year],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        userId: String(1),
+        month: String(month),
+        year: String(year),
+      }).toString();
+
+      return await (await fetch("/api/habit-groups?" + params)).json();
+    },
+  });
 
   const mobileGridStyle = {
     gridTemplateColumns: "100px repeat(7, minmax(30px, 1fr))",
@@ -42,25 +56,17 @@ export const HabitsTable = ({
     const newMarks = [...habit.marks];
     newMarks[day] = newMark;
 
-    setHabitList((prev) => {
-      const newHabitList = [...prev];
-      const index = newHabitList.findIndex((h) => h.name === habit.name);
-      if (index === -1) return prev;
-
-      newHabitList[index] = {
-        ...newHabitList[index],
-        marks: newMarks,
-      };
-      return newHabitList;
-    });
-
     fetch(`/api/habits/${habit.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ marks: newMarks }),
-    });
+    }).then(() =>
+      queryClient.invalidateQueries({
+        queryKey: ["habit-groups", month, year],
+      }),
+    );
   };
 
   const isWeekend = (day: number | null) => {
@@ -78,13 +84,12 @@ export const HabitsTable = ({
     const startDay = currentWeek * 7;
     const days = [];
 
-    // Always push 7 items for mobile view
     for (let i = 0; i < 7; i++) {
       const dayIndex = startDay + i;
       if (dayIndex < daysInMonth) {
         days.push(dayIndex);
       } else {
-        days.push(null); // Push null for empty cells
+        days.push(null);
       }
     }
 
@@ -93,82 +98,136 @@ export const HabitsTable = ({
 
   const days = getCurrentWeekDays();
 
+  const handleAddHabit = () => {
+    setNewHabit({
+      name: "",
+      marks: Array(daysInMonth).fill(""),
+      id: 0,
+    });
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNewHabit((prev) => {
+      if (!prev) return prev;
+      console.log({ prev });
+      return { ...prev, name: event.target.value };
+    });
+  };
+
+  const createNewHabit = async () => {
+    if (!newHabit) return;
+    fetch("/api/habits", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        marks: newHabit.marks,
+        month: month,
+        name: newHabit.name,
+        year: year,
+      }),
+    }).then(() =>
+      queryClient
+        .invalidateQueries({
+          queryKey: ["habit-groups", month, year],
+        })
+        .then(() => {
+          setNewHabit(null);
+        }),
+    );
+  };
+
   useEffect(() => {
-    setLoading(true);
-    async function getHabitGroups() {
-      try {
-        const params = new URLSearchParams({
-          userId: String(1),
-          month: String(month),
-          year: String(year),
-        }).toString();
-
-        const res = await fetch("/api/habit-groups?" + params);
-        const json = await res.json();
-        setHabitList(json.habits);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    getHabitGroups();
-  }, [month, year]);
+    newHabitInputRef?.current?.focus();
+  }, [newHabit]);
 
   useEffect(() => {
-    if (window !== undefined) {
+    if (typeof window !== "undefined") {
       setIsDesktop(window.innerWidth >= 768);
     }
   }, []);
 
   return (
     <div className="overflow-x-auto rounded">
-      {!loading && (
-        <div
-          className="grid gap-px bg-neutral-200 min-w-full"
-          style={isDesktop ? desktopGridStyle : mobileGridStyle}
-        >
-          <div className="bg-white p-2 font-medium">
-            <span className="hidden md:inline">Habit</span>
-          </div>
-          {days.map((dayIndex, i) => (
-            <div
-              key={i}
-              className={cn(
-                dayIndex !== null ? "bg-white" : "bg-neutral-200",
-                "p-2 text-center text-sm whitespace-nowrap",
-                isWeekend(dayIndex) ? "font-bold" : "",
-              )}
-            >
-              {dayIndex !== null && dayIndex + 1}
+      <div
+        className="grid gap-px bg-neutral-200 min-w-full"
+        style={isDesktop ? desktopGridStyle : mobileGridStyle}
+      >
+        {!isLoading && (
+          <>
+            <div className="flex flex-row justify-between bg-white p-2 font-medium">
+              <span className="hidden md:inline">Habit</span>
+              <button className="hidden md:inline" onClick={handleAddHabit}>
+                +
+              </button>
             </div>
-          ))}
-
-          {habitList?.map((habit) => (
-            <React.Fragment key={habit.name}>
-              <div className="bg-white p-2 text-sm truncate">{habit.name}</div>
-              {days.map((dayIndex, i) => (
-                <div
-                  key={`${habit.name}-${i}`}
-                  className={cn(
-                    dayIndex !== null
-                      ? "bg-white hover:bg-neutral-50"
-                      : "bg-neutral-200",
-                    "p-2 text-center text-sm",
-                  )}
-                  onClick={() =>
-                    dayIndex !== null && toggleMark(habit, dayIndex)
-                  }
-                  role={dayIndex !== null ? "button" : undefined}
-                >
-                  {dayIndex !== null && habit.marks[dayIndex]}
+            {days.map((dayIndex, i) => (
+              <div
+                key={i}
+                className={cn(
+                  dayIndex !== null ? "bg-white" : "bg-neutral-200",
+                  "p-2 text-center text-sm whitespace-nowrap",
+                  isWeekend(dayIndex) ? "font-bold" : "",
+                )}
+              >
+                {dayIndex !== null && dayIndex + 1}
+              </div>
+            ))}
+            {data?.habits?.map((habit) => (
+              <React.Fragment key={habit.id}>
+                <div className="bg-white p-2 text-sm truncate">
+                  {habit.name}
                 </div>
-              ))}
-            </React.Fragment>
-          ))}
-        </div>
-      )}
+                {days.map((dayIndex, i) => (
+                  <div
+                    key={`${habit.name}-${i}`}
+                    className={cn(
+                      dayIndex !== null
+                        ? "bg-white hover:bg-neutral-50"
+                        : "bg-neutral-200",
+                      "p-2 text-center text-sm",
+                    )}
+                    onClick={() =>
+                      dayIndex !== null && toggleMark(habit, dayIndex)
+                    }
+                    role={dayIndex !== null ? "button" : undefined}
+                  >
+                    {dayIndex !== null && habit.marks[dayIndex]}
+                  </div>
+                ))}
+              </React.Fragment>
+            ))}
+            {newHabit && (
+              <>
+                <input
+                  className="bg-white p-2 text-sm truncate"
+                  onChange={handleInputChange}
+                  onBlur={createNewHabit}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      event.currentTarget.blur();
+                    }
+                  }}
+                  ref={newHabitInputRef}
+                />
+                {days.map((dayIndex, i) => (
+                  <div
+                    key={`${newHabit.name}-${i}`}
+                    className={cn(
+                      dayIndex !== null
+                        ? "bg-white hover:bg-neutral-50"
+                        : "bg-neutral-200",
+                      "p-2 text-center text-sm",
+                    )}
+                    role={dayIndex !== null ? "button" : undefined}
+                  />
+                ))}
+              </>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };
