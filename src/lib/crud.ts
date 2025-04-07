@@ -43,9 +43,12 @@ export async function getOrCreateHabitGroup({
   month,
 }: GetHabitGroupByMonthProps) {
   const supabase = await createClient();
-  const habitGroup = await getHabitGroupByMonth({ year, month });
 
-  if (habitGroup) return habitGroup;
+  let habitGroup;
+  try {
+    habitGroup = await getHabitGroupByMonth({ year, month });
+    return habitGroup;
+  } catch (error) {}
 
   const { data: newHabitGroup, error } = await supabase
     .from("habitgroups")
