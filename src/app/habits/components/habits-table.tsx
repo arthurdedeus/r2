@@ -157,10 +157,8 @@ export const HabitsTable = ({
         {!isLoading && (
           <>
             <div className="flex flex-row justify-between bg-white p-2 font-medium">
-              <span className="hidden md:inline">Habit</span>
-              <button className="hidden md:inline" onClick={handleAddHabit}>
-                +
-              </button>
+              <span>Habit</span>
+              <button onClick={handleAddHabit}>+</button>
             </div>
             {days.map((dayIndex, i) => (
               <div
