@@ -12,6 +12,12 @@ interface UpdateHabitProps {
   marks?: Mark[];
 }
 
+interface CreateHabitProps {
+  name: string;
+  marks: Mark[];
+  habitGroupId: number;
+}
+
 export async function getHabitGroupByMonth({
   year,
   month,
@@ -32,12 +38,53 @@ export async function getHabitGroupByMonth({
   return habitGroup;
 }
 
+export async function getOrCreateHabitGroup({
+  year,
+  month,
+}: GetHabitGroupByMonthProps) {
+  const supabase = await createClient();
+  const habitGroup = await getHabitGroupByMonth({ year, month });
+
+  if (habitGroup) return habitGroup;
+
+  const { data: newHabitGroup, error } = await supabase
+    .from("habitgroups")
+    .insert({ month, year })
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return newHabitGroup;
+}
+
 export async function updateHabit({ id, marks, name }: UpdateHabitProps) {
   const supabase = await createClient();
   const { data: habit, error } = await supabase
     .from("habits")
     .update({ marks, name })
     .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return habit;
+}
+
+export async function createHabit({
+  habitGroupId,
+  marks,
+  name,
+}: CreateHabitProps) {
+  const supabase = await createClient();
+  const { data: habit, error } = await supabase
+    .from("habits")
+    .insert({ marks, name, habit_group_id: habitGroupId })
     .select()
     .single();
 
