@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# R2
 
-First, run the development server:
+So you've found R2, nice. I wanted to use a bullet journal-like habit tracker, so I've decided to build one.
+It's a modern web app built to be intuitive, fast, and developer-friendly. It doesn't mean that it is (yet). This doc will walk you through what's under the hood, how to get it running locally, and how you can make it better.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🧱 What’s it made of?
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+We picked tools that make building fast and efficient, as well as 100% free.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **React** – It’s the backbone of the app. Components, state, all that good stuff.
+- **TypeScript** – Because catching bugs *before* production feels like a win.
+- **Supabase** – An open-source Postgres database with a generous free tier.
+- **Clerk** – Plug-and-play auth without the tears. It takes care of sign-ups, logins, and all that identity jazz.
+- **Tailwind CSS** – Utility-first styling that doesn’t make you want to cry. Your UI looks clean without a 400-line stylesheet.
+- **React Query** – Data fetching that Just Works™. Goodbye, loading spinners from hell.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Getting it running locally
 
-## Learn More
+Here’s how to go from 0 to local dev in under 5 minutes (depending on caffeine levels).
 
-To learn more about Next.js, take a look at the following resources:
+1. **Clone the repo**:
+    ```bash
+    git clone https://github.com/arthurdedeus/r2.git
+    cd r2
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. **Install dependencies**:
+    Make sure you’ve got Node.js installed. Then:
+    ```bash
+    npm install
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. **Add your env vars**:
+<!-- TODO: Add the env vars that are actually needed -->
+    Create a `.env` file and drop in your keys:
+    ```env
+    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+    CLERK_FRONTEND_API=your_clerk_frontend_api
+    ```
 
-## Deploy on Vercel
+4. **Fire it up**:
+    ```bash
+    npm run dev
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+5. **Visit** `http://localhost:3000/habits` and bask in the glory.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🤝 Want to contribute?
+
+Yes, please. Found a bug? Got a cool feature idea? Submit an issue or open a PR. We’re friendly.
+
+## 🪪 License
+
+MIT. Do whatever you want. Responsibly.
+
+## 👀 Poke around
+
+Feel free to dive into the codebase and see how everything’s stitched together. Got questions? Reach out or open a discussion.
+
+---
+
+Let’s build cool stuff. 🎉
