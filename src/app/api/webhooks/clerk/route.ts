@@ -43,7 +43,9 @@ export async function POST(req: Request) {
   }
 
   if (evt.type === "user.created") {
-    const supabaseClient = await createClient(process.env.SERVICE_ROLE_KEY);
+    const supabaseClient = await createClient(
+      process.env.SUPABASE_SERVICE_ROLE_KEY,
+    );
     await supabaseClient.from("users").insert({
       user_id: evt.data.id,
       email: evt.data.email_addresses[0].email_address,
