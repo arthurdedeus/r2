@@ -6,7 +6,7 @@ It's a modern web app built to be intuitive, fast, and developer-friendly. It do
 
 ## 🧱 What’s it made of?
 
-We picked tools that make building fast and efficient, as well as 100% free.
+I've picked tools that make building fast and efficient, as well as 100% free.
 
 - **React** – It’s the backbone of the app. Components, state, all that good stuff.
 - **TypeScript** – Because catching bugs *before* production feels like a win.
@@ -32,12 +32,24 @@ Here’s how to go from 0 to local dev in under 5 minutes (depending on caffeine
     ```
 
 3. **Add your env vars**:
-<!-- TODO: Add the env vars that are actually needed -->
-    Create a `.env` file and drop in your keys:
+    Create a `.env.local` file and drop in your keys:
     ```env
-    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-    CLERK_FRONTEND_API=your_clerk_frontend_api
+    POSTGRES_URL=
+    POSTGRES_PRISMA_URL=
+    SUPABASE_URL=
+    NEXT_PUBLIC_SUPABASE_URL=
+    POSTGRES_URL_NON_POOLING=
+    SUPABASE_JWT_SECRET=
+    POSTGRES_USER=
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=
+    POSTGRES_PASSWORD=
+    POSTGRES_DATABASE=
+    SUPABASE_SERVICE_ROLE_KEY=
+    POSTGRES_HOST=
+
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+    CLERK_SECRET_KEY=
+    SIGNING_SECRET=
     ```
 
 4. **Fire it up**:
@@ -46,6 +58,8 @@ Here’s how to go from 0 to local dev in under 5 minutes (depending on caffeine
     ```
 
 5. **Visit** `http://localhost:3000/habits` and bask in the glory.
+Actually, think won't really work until you have the db schema created.
+I plan to update this documentation with instructions on how to set it up. For now, you'll have to guess it.
 
 ## 🤝 Want to contribute?
 
