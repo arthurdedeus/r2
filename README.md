@@ -50,6 +50,8 @@ Here’s how to go from 0 to local dev in under 5 minutes (depending on caffeine
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
     CLERK_SECRET_KEY=
     SIGNING_SECRET=
+
+    NEXT_PUBLIC_POSTHOG_KEY=
     ```
 
 4. **Fire it up**:
@@ -58,7 +60,7 @@ Here’s how to go from 0 to local dev in under 5 minutes (depending on caffeine
     ```
 
 5. **Visit** `http://localhost:3000/habits` and bask in the glory.
-Actually, think won't really work until you have the db schema created.
+Actually, this won't really work until you have the db schema created.
 I plan to update this documentation with instructions on how to set it up. For now, you'll have to guess it.
 
 ## 🤝 Want to contribute?
