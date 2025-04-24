@@ -99,3 +99,16 @@ export async function createHabit({
 
   return habit;
 }
+
+export async function deleteHabit(id: number) {
+  const supabase = await createClient();
+  const response = await supabase
+    .from("habits")
+    .delete()
+    .eq("id", id);
+  console.log(response);
+
+  if (response.error) {
+    throw new Error(response.error.message);
+  }
+}

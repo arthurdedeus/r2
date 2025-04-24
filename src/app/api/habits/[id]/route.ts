@@ -1,5 +1,5 @@
 import { Mark } from "@/app/habits/types";
-import { updateHabit } from "@/lib/crud";
+import { updateHabit, deleteHabit } from "@/lib/crud";
 import { Tables } from "@/lib/supabase/database.types";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -21,6 +21,23 @@ export async function PATCH(
       name: body.name,
     });
     return NextResponse.json(habit, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+): Promise<NextResponse<{ success: boolean } | { error: string }>> {
+  const id = Number((await params).id);
+  try {
+    await deleteHabit(id);
+    return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
