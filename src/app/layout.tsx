@@ -24,6 +24,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "R2 - Habit Tracker",
   description: "Track your habits, one dot at a time. A minimalist approach to building better routines.",
+  icons: {
+    icon: "/caipora.ico",
+  },
 };
 
 export default function RootLayout({
