@@ -54,8 +54,11 @@ export const EditableHabitName = ({ habit, onDelete, onUpdate }: EditableHabitNa
   };
 
   const handleBlur = () => {
-    if (editedName !== habit.name) {
-      onUpdate({ ...habit, name: editedName });
+    const trimmedName = editedName.trim();
+    if (trimmedName === '') {
+      setEditedName(habit.name);
+    } else if (trimmedName !== habit.name) {
+      onUpdate({ ...habit, name: trimmedName });
     }
     setIsEditing(false);
   };

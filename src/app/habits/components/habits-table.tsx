@@ -203,6 +203,7 @@ export const HabitsTable = ({
 
   const createNewHabit = async () => {
     if (!newHabit) return;
+    if (!newHabit.name.trim()) return;
     fetch("/api/habits", {
       method: "POST",
       headers: {
