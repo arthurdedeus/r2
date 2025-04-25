@@ -8,7 +8,7 @@ import { HabitsTable } from "./components/habits-table";
 export default function HabitTracker() {
   const [month, setMonth] = useState(() => new Date().getMonth() + 1);
   const [year, setYear] = useState(() => new Date().getFullYear());
-  const [currentWeek, setCurrentWeek] = useState(0);
+  const [currentWeek, setCurrentWeek] = useState(Math.floor((new Date().getDate() - 1) / 7));
 
   const daysInMonth = useMemo(
     () => new Date(year, month, 0).getDate(),
@@ -30,7 +30,9 @@ export default function HabitTracker() {
   const updateMonthYear = (newMonth: number, newYear: number) => {
     setMonth(newMonth);
     setYear(newYear);
-    setCurrentWeek(0);
+    const currentDate = new Date();
+    const isCurrentMonth = currentDate.getMonth() + 1 === newMonth && currentDate.getFullYear() === newYear;
+    setCurrentWeek(isCurrentMonth ? Math.floor((currentDate.getDate() - 1) / 7) : 0);
   };
 
   return (
