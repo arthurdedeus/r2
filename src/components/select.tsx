@@ -8,7 +8,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
     return (
       <select
         className={cn(
-          "bg-[#f5f3eb] border-none outline-none rounded pr-2 py-1",
+          "bg-[#f5f3eb] border-none outline-hidden rounded pr-2 py-1",
           className,
         )}
         ref={ref}

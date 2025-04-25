@@ -74,7 +74,7 @@ export const EditableHabitName = ({ habit, onDelete, onUpdate }: EditableHabitNa
   if (isEditing) {
     return (
       <input
-        className="w-full bg-transparent outline-none"
+        className="w-full bg-transparent outline-hidden"
         value={editedName}
         onChange={handleInputChange}
         onBlur={handleBlur}
