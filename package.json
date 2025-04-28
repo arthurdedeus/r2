@@ -15,7 +15,7 @@
     "@tanstack/react-query": "^5.74.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.487.0",
+    "lucide-react": "^0.503.0",
     "next": "15.1.7",
     "posthog-js": "^1.236.3",
     "posthog-node": "^4.11.3",
