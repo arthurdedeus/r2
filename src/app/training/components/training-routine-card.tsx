@@ -40,9 +40,9 @@ export function TrainingRoutineCard({ routine }: TrainingRoutineCardProps) {
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full">
-          <Link href={`/training/${routine.id}`}>View Details</Link>
-        </Button>
+        <Link href={`/training/${routine.id}`} className="w-full">
+          <Button className="w-full cursor-pointer">View Details</Button>
+        </Link>
       </CardFooter>
     </Card>
   )
