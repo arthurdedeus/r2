@@ -116,38 +116,38 @@ export function ExerciseDetail({ exercise: initialExercise, isEditable = false }
   return (
     <Card
       className={cn(
-        "overflow-hidden transition-colors duration-300",
+        "overflow-hidden transition-colors duration-300 py-2 gap-0",
         allCompleted && "bg-green-50 border-green-200 dark:bg-green-950/30 dark:border-green-800",
       )}
     >
       {/* Exercise Header */}
       <div
         className={cn(
-          "flex items-center justify-between px-6 py-4 cursor-pointer",
+          "flex justify-between items-center px-4 cursor-pointer h-10",
           allCompleted && "bg-green-50 dark:bg-green-950/30",
         )}
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold leading-none tracking-tight">{exercise.name}</h3>
-          {allCompleted && <CheckCircle2 className="h-5 w-5 text-green-500 dark:text-green-400" />}
+        <div className="flex items-center gap-2 h-full">
+          <h3 className="text-base font-semibold leading-none tracking-tight">{exercise.name}</h3>
+          {allCompleted && <CheckCircle2 className="h-4 w-4 text-green-500 dark:text-green-400" />}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 h-full">
           {!isEditable && <Lock className="h-4 w-4 text-muted-foreground" />}
           {isExpanded ? (
-            <ChevronUp className="h-5 w-5 text-muted-foreground" />
+            <ChevronUp className="h-4 w-4 text-muted-foreground" />
           ) : (
-            <ChevronDown className="h-5 w-5 text-muted-foreground" />
+            <ChevronDown className="h-4 w-4 text-muted-foreground" />
           )}
         </div>
       </div>
 
       {/* Exercise Content (expandable) */}
-      <div className={cn("transition-all", isExpanded ? "max-h-[2000px]" : "max-h-0")}>
-        <CardContent className={cn("pt-0", allCompleted && "bg-green-50 dark:bg-green-950/30")}>
-          <p className="text-muted-foreground mb-4">{exercise.description}</p>
+      <div className={cn("transition-all", isExpanded ? "max-h-[2000px]" : "max-h-0 overflow-hidden")}>
+        <CardContent className={cn("pt-0 px-4 py-3", allCompleted && "bg-green-50 dark:bg-green-950/30", !isExpanded && "p-0")}>
+          {isExpanded && <p className="text-sm text-muted-foreground mb-3">{exercise.description}</p>}
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             {/* Exercise metadata */}
             <ExerciseMetadata restTime={exercise.restTime} technique={exercise.technique} isEditable={isEditable} />
 
