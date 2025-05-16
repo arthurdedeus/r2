@@ -15,7 +15,7 @@ interface TrainingDetailClientProps {
 
 export function TrainingDetailClient({ routine, exercises }: TrainingDetailClientProps) {
   // Use the workout hook to manage workout state and timing
-  const { workoutState, startWorkout, completeWorkout, currentTime, elapsedTime, formatTime } = useWorkout(routine)
+  const { workoutState, startWorkout, completeWorkout, cancelWorkout, currentTime, elapsedTime, formatTime } = useWorkout(routine)
 
   return (
     <div className="container px-4 sm:px-6 py-6 md:py-10 mx-auto">
@@ -25,6 +25,7 @@ export function TrainingDetailClient({ routine, exercises }: TrainingDetailClien
         workoutState={workoutState}
         onStartWorkout={startWorkout}
         onCompleteWorkout={completeWorkout}
+        onCancelWorkout={cancelWorkout}
       />
 
       {/* Live Timer (only shown during workout) */}
@@ -34,7 +35,11 @@ export function TrainingDetailClient({ routine, exercises }: TrainingDetailClien
       {workoutState === "completed" && <WorkoutCompletionAlert elapsedTime={elapsedTime} formatTime={formatTime} />}
 
       {/* Exercise List */}
-      <ExerciseList exercises={exercises} isEditable={workoutState === "in_progress"} />
+      <ExerciseList
+        exercises={exercises}
+        isEditable={workoutState === "in_progress"}
+        workoutState={workoutState}
+      />
     </div>
   )
 }

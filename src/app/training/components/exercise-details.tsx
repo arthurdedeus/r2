@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { ChevronDown, ChevronUp, CheckCircle2, Lock } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -11,9 +11,10 @@ import { ExerciseSetsTable } from "@/app/training/components/exercise-sets-table
 interface ExerciseDetailProps {
   exercise: Exercise
   isEditable?: boolean
+  workoutState?: "not_started" | "in_progress" | "completed"
 }
 
-export function ExerciseDetail({ exercise: initialExercise, isEditable = false }: ExerciseDetailProps) {
+export function ExerciseDetail({ exercise: initialExercise, isEditable = false, workoutState = "not_started" }: ExerciseDetailProps) {
   // Convert array-based executedSets to record-based for initial state
   const convertedInitialExercise = {
     ...initialExercise,
@@ -34,6 +35,17 @@ export function ExerciseDetail({ exercise: initialExercise, isEditable = false }
   const [isExpanded, setIsExpanded] = useState(false)
   const [editingSet, setEditingSet] = useState<number | null>(null)
   const [editValues, setEditValues] = useState<SetData>({ reps: 0, weight: 0 })
+
+  // Reset exercise state when workout starts
+  useEffect(() => {
+    if (workoutState === "in_progress") {
+      setExercise({
+        ...initialExercise,
+        executedSets: {},
+      })
+      setEditingSet(null)
+    }
+  }, [workoutState, initialExercise])
 
   // Check if all sets are completed
   const areAllSetsCompleted = () => {

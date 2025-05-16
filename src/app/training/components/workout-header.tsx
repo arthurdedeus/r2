@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowLeft, Play, CheckCircle, Timer } from "lucide-react"
+import { ArrowLeft, Play, CheckCircle, Timer, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { TrainingRoutine } from "@/types/training"
 
@@ -10,9 +10,10 @@ interface WorkoutHeaderProps {
   workoutState: "not_started" | "in_progress" | "completed"
   onStartWorkout: () => void
   onCompleteWorkout: () => void
+  onCancelWorkout: () => void
 }
 
-export function WorkoutHeader({ routine, workoutState, onStartWorkout, onCompleteWorkout }: WorkoutHeaderProps) {
+export function WorkoutHeader({ routine, workoutState, onStartWorkout, onCompleteWorkout, onCancelWorkout }: WorkoutHeaderProps) {
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center mb-4">
@@ -22,17 +23,24 @@ export function WorkoutHeader({ routine, workoutState, onStartWorkout, onComplet
           </Link>
         </Button>
 
-        {workoutState === "not_started" && (
-          <Button onClick={onStartWorkout} className="flex items-center gap-2 cursor-pointer">
-            <Play className="h-4 w-4" /> Start Routine
-          </Button>
-        )}
+        <div className="flex items-center gap-2">
+          {workoutState === "not_started" && (
+            <Button onClick={onStartWorkout} className="flex items-center gap-2 cursor-pointer">
+              <Play className="h-4 w-4" /> Start Routine
+            </Button>
+          )}
 
-        {workoutState === "in_progress" && (
-          <Button onClick={onCompleteWorkout} className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4" /> Complete Workout
-          </Button>
-        )}
+          {workoutState === "in_progress" && (
+            <>
+              <Button onClick={onCancelWorkout} variant="ghost" className="flex items-center gap-2">
+                <X className="h-4 w-4" /> Cancel
+              </Button>
+              <Button onClick={onCompleteWorkout} className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4" /> Complete Workout
+              </Button>
+            </>
+          )}
+        </div>
       </div>
 
       <h1 className="text-2xl font-bold md:text-3xl">{routine.title}</h1>

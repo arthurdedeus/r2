@@ -37,7 +37,6 @@ export function ExerciseSetsTable({
           <tr className="border-b dark:border-gray-700">
             <th className="py-2 px-2 text-left font-medium text-sm">Set</th>
             <th className="py-2 px-2 text-left font-medium text-sm">Target Reps</th>
-            <th className="py-2 px-2 text-left font-medium text-sm">Target Weight</th>
             <th className="py-2 px-2 text-left font-medium text-sm">Executed Reps</th>
             <th className="py-2 px-2 text-left font-medium text-sm">Executed Weight</th>
             <th className="py-2 px-2 text-center font-medium text-sm">Completed</th>
@@ -54,7 +53,6 @@ export function ExerciseSetsTable({
               <tr key={index} className="border-b last:border-0 dark:border-gray-700">
                 <td className="py-3 px-2 font-medium">{index + 1}</td>
                 <td className="py-3 px-2">{targetSet.reps}</td>
-                <td className="py-3 px-2">{targetSet.weight} kg</td>
 
                 {/* Executed Reps - Editable */}
                 <td className="py-3 px-2">
@@ -119,7 +117,7 @@ export function ExerciseSetsTable({
                 </td>
 
                 {/* Completion Status Checkbox */}
-                <td className="py-3 px-2 text-center">
+                <td className="py-3 px-2">
                   {isEditing ? (
                     <Button
                       size="sm"
@@ -133,7 +131,7 @@ export function ExerciseSetsTable({
                       <Save className="h-4 w-4" />
                     </Button>
                   ) : (
-                    <div className="flex justify-center items-center">
+                    <div className="flex items-center gap-2">
                       <Checkbox
                         id={`set-${exercise.id}-${index}`}
                         checked={isCompleted}
@@ -149,7 +147,7 @@ export function ExerciseSetsTable({
                         onClick={(e) => e.stopPropagation()}
                         disabled={!isEditable}
                       />
-                      {isCompleted && isEditable && (
+                      {isEditable && (
                         <Button
                           size="sm"
                           variant="ghost"
@@ -157,7 +155,7 @@ export function ExerciseSetsTable({
                             e.stopPropagation()
                             handleEditSet(index)
                           }}
-                          disabled={!isEditable}
+                          disabled={!isCompleted}
                         >
                           <Edit2 className="h-4 w-4" />
                         </Button>

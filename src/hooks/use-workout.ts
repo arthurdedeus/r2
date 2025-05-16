@@ -44,6 +44,17 @@ export function useWorkout(routine: TrainingRoutine) {
     })
   }
 
+  // Cancel the workout
+  const cancelWorkout = () => {
+    setWorkoutState("not_started")
+    setStartTime(null)
+    setCurrentTime(0)
+    setElapsedTime(0)
+    toast("Workout Cancelled", {
+      description: `You've cancelled ${routine.title}.`,
+    })
+  }
+
   // Complete the workout
   const completeWorkout = () => {
     const endTime = new Date()
@@ -79,6 +90,7 @@ export function useWorkout(routine: TrainingRoutine) {
     workoutState,
     startWorkout,
     completeWorkout,
+    cancelWorkout,
     currentTime,
     elapsedTime,
     formatTime,
