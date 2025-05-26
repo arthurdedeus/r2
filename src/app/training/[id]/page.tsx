@@ -14,5 +14,9 @@ export default function TrainingDetailPage({ params }: TrainingDetailPageProps) 
     notFound()
   }
 
-  return <TrainingDetailClient routine={routine} />
+  return (
+    <div className="min-h-screen bg-[hsl(var(--page-background))]">
+      <TrainingDetailClient routine={routine} />
+    </div>
+  )
 }

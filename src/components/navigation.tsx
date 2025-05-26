@@ -30,7 +30,7 @@ export function Navigation() {
             href={item.href}
             className={cn(
               "inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium",
-              pathname === item.href
+              pathname.startsWith(item.href)
                 ? "border-primary text-foreground"
                 : "border-transparent text-muted-foreground hover:border-muted-foreground hover:text-foreground"
             )}
@@ -66,7 +66,7 @@ export function Navigation() {
                 href={item.href}
                 className={cn(
                   "block border-l-4 py-2 pl-3 pr-4 text-base font-medium",
-                  pathname === item.href
+                  pathname.startsWith(item.href)
                     ? "border-primary bg-primary/10 text-foreground"
                     : "border-transparent text-muted-foreground hover:border-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
