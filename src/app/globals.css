@@ -66,6 +66,7 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
+    --page-background: 40 20% 95%;
 
     --foreground: 240 10% 3.9%;
 
@@ -117,6 +118,7 @@
   }
   .dark {
     --background: 240 10% 3.9%;
+    --page-background: 240 10% 3.9%;
 
     --foreground: 0 0% 98%;
 

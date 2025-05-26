@@ -11,6 +11,7 @@ import "./globals.css";
 import { PostHogProvider } from "./providers/PostHogProvider";
 import Providers from "./providers";
 import { Toaster } from "@/components/ui/toaster";
+import { Navigation } from "@/components/navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,16 +41,29 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <PostHogProvider>
-            <header className="flex justify-end items-center p-4 gap-4 h-16">
-              <SignedOut>
-                <SignInButton />
-                <SignUpButton />
-              </SignedOut>
-              <SignedIn>
-                <UserButton />
-              </SignedIn>
-            </header>
-            {children}
+            <div className="min-h-screen flex flex-col">
+              <header className="border-b">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                  <div className="flex h-16 items-center justify-between">
+                    <SignedIn>
+                      <Navigation />
+                    </SignedIn>
+                    <div className="flex items-center gap-4">
+                      <SignedOut>
+                        <SignInButton />
+                        <SignUpButton />
+                      </SignedOut>
+                      <SignedIn>
+                        <UserButton />
+                      </SignedIn>
+                    </div>
+                  </div>
+                </div>
+              </header>
+              <main className="flex-1">
+                {children}
+              </main>
+            </div>
             <Toaster />
           </PostHogProvider>
         </body>

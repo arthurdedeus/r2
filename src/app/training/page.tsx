@@ -7,7 +7,7 @@ export default function TrainingPage() {
   const { data: trainingRoutines, isLoading, isError } = useListTrainings()
 
   return (
-    <div className="container px-4 sm:px-6 py-6 md:py-10 mx-auto">
+    <div className="container px-4 sm:px-6 py-6 md:py-10 mx-auto min-h-screen bg-[hsl(var(--page-background))]">
       <h1 className="text-2xl font-bold mb-6 md:text-3xl">Training Routines</h1>
       <p className="text-muted-foreground mb-6">Select a training routine to begin your workout session.</p>
 
