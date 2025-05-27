@@ -36,8 +36,10 @@ export default function HabitTracker() {
   };
 
   return (
-    <div className="p-4 md:p-8 min-h-screen bg-[#f5f3eb]">
+    <div className="p-4 md:p-8 min-h-screen bg-[hsl(var(--page-background))]">
       <div className="max-w-full md:max-w-[1200px] mx-auto">
+        <h1 className="text-2xl font-bold mb-6 md:text-3xl">Habit Tracker</h1>
+        <p className="text-muted-foreground mb-6">Track your daily habits and build better routines.</p>
         <MonthSelector month={month} year={year} onChange={updateMonthYear} />
         <WeekNavigation
           currentWeek={currentWeek}

@@ -1,0 +1,58 @@
+import type { TrainingRoutine } from "@/types/training"
+
+export const trainingRoutines: TrainingRoutine[] = [
+  {
+    id: "upper-body",
+    title: "Upper Body Strength",
+    description: "Focus on chest, shoulders, and arms for maximum strength gains",
+    exerciseCount: 6,
+    completedCount: 12,
+    targetCompletions: 20,
+    estimatedDuration: 45,
+  },
+  {
+    id: "lower-body",
+    title: "Lower Body Power",
+    description: "Build leg strength and power with compound movements",
+    exerciseCount: 5,
+    completedCount: 8,
+    targetCompletions: 20,
+    estimatedDuration: 50,
+  },
+  {
+    id: "core",
+    title: "Core Stability",
+    description: "Strengthen your core and improve overall stability",
+    exerciseCount: 7,
+    completedCount: 15,
+    targetCompletions: 20,
+    estimatedDuration: 30,
+  },
+  {
+    id: "full-body",
+    title: "Full Body Workout",
+    description: "Complete full body routine for overall fitness",
+    exerciseCount: 8,
+    completedCount: 5,
+    targetCompletions: 20,
+    estimatedDuration: 60,
+  },
+  {
+    id: "hiit",
+    title: "HIIT Cardio",
+    description: "High intensity interval training to burn fat and improve conditioning",
+    exerciseCount: 10,
+    completedCount: 3,
+    targetCompletions: 20,
+    estimatedDuration: 25,
+  },
+  {
+    id: "mobility",
+    title: "Mobility & Flexibility",
+    description: "Improve range of motion and prevent injuries",
+    exerciseCount: 8,
+    completedCount: 2,
+    targetCompletions: 20,
+    estimatedDuration: 35,
+  },
+]
