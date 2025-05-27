@@ -1,9 +1,9 @@
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Dumbbell, Clock } from "lucide-react"
 import type { TrainingRoutine } from "@/types/training"
+import { cn } from "@/lib/utils"
 
 interface TrainingRoutineCardProps {
   routine: TrainingRoutine
@@ -42,8 +42,17 @@ export function TrainingRoutineCard({ routine }: TrainingRoutineCardProps) {
         </div>
       </CardContent>
       <CardFooter>
-        <Link href={`/training/${routine.id}`} className="w-full">
-          <Button className="w-full cursor-pointer">View Details</Button>
+        <Link
+          href={`/training/${routine.id}`}
+          className={cn(
+            "inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2",
+            "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+            "disabled:opacity-50 disabled:pointer-events-none",
+            "w-full"
+          )}
+        >
+          View Details
         </Link>
       </CardFooter>
     </Card>
