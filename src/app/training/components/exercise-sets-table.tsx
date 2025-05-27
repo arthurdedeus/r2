@@ -138,10 +138,6 @@ export function ExerciseSetsTable({
                         onCheckedChange={(checked) => {
                           if (isEditable) {
                             toggleSetCompletion(index, checked === true)
-                            if (checked === true && !executedSet) {
-                              // If checking and no executed values yet, open edit mode
-                              setTimeout(() => handleEditSet(index), 0)
-                            }
                           }
                         }}
                         onClick={(e) => e.stopPropagation()}

@@ -104,10 +104,19 @@ export function ExerciseDetail({ exercise: initialExercise, isEditable = false, 
 
     if (checked) {
       // If checking the box, add default values from target
-      newExecutedSets[setIndex] = { ...exercise.targetSets[setIndex] }
+      const targetSet = exercise.targetSets[setIndex] || { reps: 0, weight: 0 }
+      newExecutedSets[setIndex] = { ...targetSet }
+
+      // Set edit values and enter edit mode immediately
+      setEditValues(targetSet)
+      setEditingSet(setIndex)
     } else {
       // If unchecking, delete this specific set
       delete newExecutedSets[setIndex]
+      // Exit edit mode if we were editing this set
+      if (editingSet === setIndex) {
+        setEditingSet(null)
+      }
     }
 
     // Update exercise state
