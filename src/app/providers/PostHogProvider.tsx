@@ -12,9 +12,11 @@ function PostHogUserIdentification() {
 
   useEffect(() => {
     if (user) {
+      const emailAddress = user.emailAddresses[0]?.emailAddress
+      const name = [user.firstName, user.lastName].filter(Boolean).join(' ')
       posthogInstance.identify(user.id, {
-        email: user.emailAddresses[0]?.emailAddress,
-        name: `${user.firstName} ${user.lastName}`,
+        email: emailAddress,
+        name: name || emailAddress,
       })
     }
   }, [user, posthogInstance])
