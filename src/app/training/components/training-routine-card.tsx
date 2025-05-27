@@ -10,8 +10,10 @@ interface TrainingRoutineCardProps {
 }
 
 export function TrainingRoutineCard({ routine }: TrainingRoutineCardProps) {
-  // Calculate completion percentage
-  const completionPercentage = Math.min(Math.round((routine.completedCount / routine.targetCompletions) * 100), 100)
+  // Calculate completion percentage with safety check for zero target
+  const completionPercentage = routine.targetCompletions > 0
+    ? Math.min(Math.round((routine.completedCount / routine.targetCompletions) * 100), 100)
+    : 0
 
   return (
     <Card className="h-full flex flex-col hover:shadow-md transition-shadow">
